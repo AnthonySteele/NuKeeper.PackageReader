@@ -21,23 +21,6 @@ namespace NuKeeper.PackageReader
                 .ToList();
         }
 
-        public NuGetSources(IEnumerable<PackageSource> sources)
-        {
-            if (sources == null)
-            {
-                throw new ArgumentNullException(nameof(sources));
-            }
-
-            var items = sources.ToList();
-
-            if (!items.Any())
-            {
-                throw new ArgumentException("No package sources defined", nameof(sources));
-            }
-
-            Items = items;
-        }
-
         public static NuGetSources GlobalFeed => new NuGetSources(NuGetConstants.V3FeedUrl);
 
         public IReadOnlyCollection<PackageSource> Items { get; }
