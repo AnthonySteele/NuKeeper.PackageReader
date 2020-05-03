@@ -27,7 +27,7 @@ namespace NuKeeper.PackageReader
 
         public override string ToString()
         {
-            return Items.Select(s => s.SourceUri.ToString()).JoinWithCommas();
+            return Items.Select(s => s.Source).JoinWithCommas();
         }
     }
 }

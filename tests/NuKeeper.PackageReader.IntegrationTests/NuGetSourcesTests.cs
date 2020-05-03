@@ -17,6 +17,7 @@ namespace NuKeeper.PackageReader.IntegrationTests
             var subject = new NuGetSources("one");
 
             Assert.That(subject.Items.Count, Is.EqualTo(1));
+            Assert.That(subject.ToString(), Is.EqualTo("one"));
         }
 
         [Test]
@@ -26,7 +27,7 @@ namespace NuKeeper.PackageReader.IntegrationTests
 
 
             Assert.That(subject.Items.Count, Is.EqualTo(2));
-            Assert.That(subject.ToString(), Is.EqualTo("http://one.com/, http://two.com/"));
+            Assert.That(subject.ToString(), Is.EqualTo("http://one.com, http://two.com"));
         }
     }
 }
