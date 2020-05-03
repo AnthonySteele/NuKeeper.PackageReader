@@ -18,8 +18,7 @@ namespace NuKeeper.PackageReader.IntegrationTests
             Assert.That(versionsMap, Is.Not.Null);
             var versions = versionsMap["Newtonsoft.Json"];
 
-            Assert.That(versions, Is.Not.Null);
-            Assert.That(versions, Is.Not.Empty);
+            PackageSearchMetadataAssert.AssertPopulated(versions);
         }
 
         [Test]
@@ -43,8 +42,8 @@ namespace NuKeeper.PackageReader.IntegrationTests
 
             Assert.That(versionsMap, Is.Not.Null);
             Assert.That(versionsMap, Is.Not.Empty);
-            Assert.That(versionsMap["Newtonsoft.Json"], Is.Not.Null);
-            Assert.That(versionsMap["Newtonsoft.Json"], Is.Not.Empty);
+            PackageSearchMetadataAssert.AssertPopulated(versionsMap["Newtonsoft.Json"]);
+
 
             Assert.That(versionsMap[badPackageName], Is.Not.Null);
             Assert.That(versionsMap[badPackageName], Is.Empty);
@@ -59,8 +58,7 @@ namespace NuKeeper.PackageReader.IntegrationTests
             Assert.That(versionsMap, Is.Not.Null);
             var versions = versionsMap["Microsoft.Extensions.Logging"];
 
-            Assert.That(versions, Is.Not.Null);
-            Assert.That(versions, Is.Not.Empty);
+            PackageSearchMetadataAssert.AssertPopulated(versions);
 
             var currentVersion = versions.First();
 
@@ -81,14 +79,10 @@ namespace NuKeeper.PackageReader.IntegrationTests
 
             Assert.That(versionsMap, Is.Not.Null);
             var loggingVersions = versionsMap["Microsoft.Extensions.Logging"];
-
-            Assert.That(loggingVersions, Is.Not.Null);
-            Assert.That(loggingVersions, Is.Not.Empty);
-
             var mapperVersions = versionsMap["AutoMapper"];
 
-            Assert.That(mapperVersions, Is.Not.Null);
-            Assert.That(mapperVersions, Is.Not.Empty);
+            PackageSearchMetadataAssert.AssertPopulated(loggingVersions);
+            PackageSearchMetadataAssert.AssertPopulated(mapperVersions);
         }
 
         private static string BadPackageName()
