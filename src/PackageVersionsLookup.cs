@@ -54,7 +54,7 @@ namespace NuKeeper.PackageReader
             catch (Exception ex)
 #pragma warning restore CA1031
             {
-                _nuKeeperLogger.Normal($"Getting {packageId} from {source} returned exception: {ex.Message}");
+                _nuKeeperLogger.Normal($"Getting '{packageId}' from '{source}' returned exception: {ex.GetType().Name} {ex.Message}");
                 return Enumerable.Empty<PackageSearchMetadata>();
             }
         }

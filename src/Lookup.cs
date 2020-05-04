@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,16 +24,21 @@ namespace NuKeeper.PackageReader
         public async Task<IDictionary<string, IReadOnlyCollection<PackageSearchMetadata>>> LookupPackageVersions(
             IEnumerable<string> packageNames)
         {
-            var results = new Dictionary<string, IReadOnlyCollection<PackageSearchMetadata>>();
-            await LookupPackageVersionsInternal(results, packageNames);
-            return results;
+            const int MaxIterations = 5;
+            var allPackageData = new Dictionary<string, IReadOnlyCollection<PackageSearchMetadata>>(StringComparer.OrdinalIgnoreCase);
+            if (packageNames.Any())
+            {
+                await LookupPackageVersionsInternal(allPackageData, packageNames, MaxIterations);
+            }
+
+            return allPackageData;
         }
 
         private async Task LookupPackageVersionsInternal(
             IDictionary<string, IReadOnlyCollection<PackageSearchMetadata>> allResults,
-            IEnumerable<string> packageNames)
+            IEnumerable<string> packageNames, int remainingIterations)
         {
-            if (! packageNames.Any())
+            if (remainingIterations < 1)
             {
                 return;
             }
@@ -40,9 +46,14 @@ namespace NuKeeper.PackageReader
             var moreResults = await _lookup.FindVersionUpdates(packageNames, _sources);
             allResults.AddRange(moreResults);
 
-            // recurse, get the data on unretrieved dependencies
             var dependantPackages = NamesOfUnretrievedPackageDependencies(allResults, moreResults);
-            await LookupPackageVersionsInternal(allResults, dependantPackages);
+            if (!dependantPackages.Any())
+            {
+                return;
+            }
+
+            // recurse, get the data on unretrieved dependencies
+            await LookupPackageVersionsInternal(allResults, dependantPackages, remainingIterations - 1);
         }
 
 

@@ -10,6 +10,16 @@ namespace NuKeeper.PackageReader.IntegrationTests
     public class LookupTests
     {
         [Test]
+        public async Task TestEmptyCase()
+        {
+            var packages = Enumerable.Empty<string>();
+            var versionsMap = await LookupVersions(packages);
+
+            Assert.That(versionsMap, Is.Not.Null);
+            Assert.That(versionsMap, Is.Empty);
+        }
+
+        [Test]
         public async Task TestHappyCase()
         {
             var packages = new string[] { "Newtonsoft.Json" };
@@ -50,6 +60,16 @@ namespace NuKeeper.PackageReader.IntegrationTests
         }
 
         [Test]
+        public async Task TestEmptyCaseWithDependencies()
+        {
+            var packages = Enumerable.Empty<string>();
+            var versionsMap = await LookupVersionsWithDependencies(packages);
+
+            Assert.That(versionsMap, Is.Not.Null);
+            Assert.That(versionsMap, Is.Empty);
+        }
+
+        [Test]
         public async Task TestPackageGetWithDependencies()
         {
             var packages = new string[] { "Microsoft.Extensions.Logging" };
@@ -62,6 +82,7 @@ namespace NuKeeper.PackageReader.IntegrationTests
 
             var currentVersion = versions.First();
 
+            PackageSearchMetadataAssert.AssertPopulated(currentVersion);
             Assert.That(currentVersion.Dependencies, Is.Not.Null);
             Assert.That(currentVersion.Dependencies, Is.Not.Empty);
             foreach(var dependantPackage in currentVersion.Dependencies)
@@ -83,6 +104,18 @@ namespace NuKeeper.PackageReader.IntegrationTests
 
             PackageSearchMetadataAssert.AssertPopulated(loggingVersions);
             PackageSearchMetadataAssert.AssertPopulated(mapperVersions);
+
+            foreach (var dependantPackage in loggingVersions.First().Dependencies)
+            {
+                Assert.That(versionsMap.ContainsKey(dependantPackage.Id), Is.True,
+                    $"No data for dependant package '{dependantPackage.Id}'");
+            }
+
+            foreach (var dependantPackage in mapperVersions.First().Dependencies)
+            {
+                Assert.That(versionsMap.ContainsKey(dependantPackage.Id), Is.True,
+                    $"No data for dependant package '{dependantPackage.Id}'");
+            }
         }
 
         private static string BadPackageName()

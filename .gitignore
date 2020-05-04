@@ -44,3 +44,4 @@ _ReSharper*/
 # Custom
 NuKeeper/Properties/launchSettings.json
 *.orig
+coveragereport
